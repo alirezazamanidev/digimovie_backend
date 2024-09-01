@@ -4,6 +4,7 @@ namespace NodeJS {
     //App
     PORT:number
     URL_SERVER:string
+    URL_CLIENT:string
     // DB
     DB_NAME: string;
     DB_USERNAME: string;
