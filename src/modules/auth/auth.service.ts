@@ -1,8 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, UserOtpEntity } from '../user/entities';
 import { Repository } from 'typeorm';
-import { AuthMessage, PublicMessage } from 'src/common/enums';
+import { AuthMessage, NotFoundMessage, PublicMessage } from 'src/common/enums';
 import { CheckOtpDTo, SendOtpDTo } from './dto/auth.dto';
 import { randomInt } from 'crypto';
 import { TokensService } from './tokens.service';
@@ -84,5 +88,23 @@ export class AuthService {
       await this.userRepository.update({ id: user.id }, { otpId: otp.id });
     }
     return otp;
+  }
+
+  async FindOneUserById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+        fullname: true,
+        phone: true,
+        phone_verify: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
+    if (!user) throw new NotFoundException(NotFoundMessage.User);
+
+    return user;
   }
 }
