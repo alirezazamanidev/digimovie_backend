@@ -12,5 +12,7 @@ namespace NodeJS {
     DB_PORT: number;
     DB_HOST: string;
     DB_TYPE: string;
+    // Secret jwt
+    JWT_SECRET_KEY:string
   }
 }
