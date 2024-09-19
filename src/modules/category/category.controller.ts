@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ContentType, SwaggerTags } from 'src/common/enums';
 import { CreateCategoryDto } from './dtos/create-category.dto';
+import { ApiPaginationQuery } from 'src/common/decorators';
+import { paginaionQueryDto } from 'src/common/dtos';
 
 @ApiTags(SwaggerTags.Category)
 @Controller('category')
@@ -22,6 +24,14 @@ export class CategoryController {
   @Get('get-all')
   findAll(){
     return this.categoryService.findAll();
+  }
+  @ApiOperation({summary:'list of categories with pagination!'})
+  @HttpCode(HttpStatus.OK)
+  @ApiPaginationQuery()
+  @Get('list')
+  listOfCategories(@Query() paginationdTo:paginaionQueryDto){
+    return this.categoryService.listOfCategories(paginationdTo)
+
   }
 
   @ApiOperation({summary:'delete one by id'})

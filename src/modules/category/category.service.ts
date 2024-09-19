@@ -13,6 +13,8 @@ import {
   PublicMessage,
 } from 'src/common/enums';
 import slugify from 'slugify';
+import { paginaionQueryDto } from 'src/common/dtos';
+import { paginationGenerator, paginationSolver } from 'src/common/utils';
 
 @Injectable()
 export class CategoryService {
@@ -64,5 +66,19 @@ export class CategoryService {
     const cate = await this.categoryRepository.findOneBy({ id });
     if (!cate) throw new NotFoundException(NotFoundMessage.Category);
     return cate;
+  }
+  async listOfCategories(paginationDto:paginaionQueryDto){
+    let {page,limit,skip}=paginationSolver(paginationDto);
+    
+    const [categories,count]=await this.categoryRepository.findAndCount({
+        where:{},
+        skip,
+        take:limit,
+        order:{id:'DESC'}
+    });
+    return {
+        pagtination:paginationGenerator(count,page,limit),
+        categories
+    }
   }
 }
