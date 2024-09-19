@@ -37,4 +37,13 @@ export class CategoryService {
     if (cate) throw new ConflictException(ConflictMessage.Slug);
     return slug;
   }
+  async findAll(){
+
+    const categories=await this.categoryRepository.find({
+        order:{id:'DESC'}
+    })
+    return {
+        categories
+    }
+  }
 }

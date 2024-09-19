@@ -5,8 +5,8 @@ import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
 
 export default function SwaggerConfig(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('********* Dijikala **********')
-    .setDescription('This Dijikala api')
+    .setTitle('********* DigiMovie **********')
+    .setDescription('This digimovie api')
     .setContact('alireza', null, 'alirezazamanidev80@gmail.com')
     .addSecurity('Authorization', SwaggerAuthConfig())
     .build();

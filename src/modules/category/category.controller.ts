@@ -1,7 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SwaggerTags } from 'src/common/enums';
+import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ContentType, SwaggerTags } from 'src/common/enums';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 
 @ApiTags(SwaggerTags.Category)
@@ -11,9 +11,16 @@ export class CategoryController {
   @ApiOperation({summary:'create new category'})
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
+  @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
   create(@Body() categoryDto:CreateCategoryDto){
     return this.categoryService.create(categoryDto)
 
   }
 
+  @ApiOperation({summary:'get all of categories for show in home site'})
+  @HttpCode(HttpStatus.OK)
+  @Get('get-all')
+  findAll(){
+    return this.categoryService.findAll();
+  }
 }

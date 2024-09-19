@@ -17,7 +17,9 @@ async function bootstrap() {
   // swagger config
   SwaggerConfig(app);
 
-  const PORT = process.env.PORT;
+  console.log(process.env.PORT);
+  
+  const PORT = process.env.PORT || 8000;
   await app.listen(PORT, () => {
     console.log(`run server => ${process.env.URL_SERVER}/api`);
     console.log(`run server => http://localhost:${PORT}/swagger`);

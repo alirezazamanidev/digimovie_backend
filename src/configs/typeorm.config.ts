@@ -5,7 +5,7 @@ export class TypeOrmDbConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(connectionName?: string): TypeOrmModuleOptions {
     return {
       type: 'postgres',
-      port: 3306,
+      port: +process.env.DB_PORT,
       host: process.env.DB_HOST,
       password: process.env.DB_PASSWORD,
       username: process.env.DB_USERNAME,
