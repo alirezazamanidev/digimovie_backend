@@ -1,9 +1,17 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from './entities/category.entity';
 import { DeepPartial, Repository } from 'typeorm';
 import { CreateCategoryDto } from './dtos/create-category.dto';
-import { ConflictMessage, PublicMessage } from 'src/common/enums';
+import {
+  ConflictMessage,
+  NotFoundMessage,
+  PublicMessage,
+} from 'src/common/enums';
 import slugify from 'slugify';
 
 @Injectable()
@@ -37,13 +45,24 @@ export class CategoryService {
     if (cate) throw new ConflictException(ConflictMessage.Slug);
     return slug;
   }
-  async findAll(){
-
-    const categories=await this.categoryRepository.find({
-        order:{id:'DESC'}
-    })
+  async findAll() {
+    const categories = await this.categoryRepository.find({
+      order: { id: 'DESC' },
+    });
     return {
-        categories
-    }
+      categories,
+    };
+  }
+  async remove(id: number) {
+    const category = await this.findOneById(id);
+    await this.categoryRepository.remove(category);
+    return {
+      message: PublicMessage.Deleted,
+    };
+  }
+  async findOneById(id: number) {
+    const cate = await this.categoryRepository.findOneBy({ id });
+    if (!cate) throw new NotFoundException(NotFoundMessage.Category);
+    return cate;
   }
 }
