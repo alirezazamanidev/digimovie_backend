@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ContentType, SwaggerTags } from 'src/common/enums';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { ApiPaginationQuery } from 'src/common/decorators';
 import { paginaionQueryDto } from 'src/common/dtos';
+import { UpdateCategoryDto } from './dtos/update-category.dto';
 
 @ApiTags(SwaggerTags.Category)
 @Controller('category')
@@ -39,5 +40,13 @@ export class CategoryController {
   @Delete('/remove/:id')
   remove(@Param('id',ParseIntPipe) id:number){
     return this.categoryService.remove(id)
+  }
+  @ApiOperation({summary:'update category by id'})
+  @HttpCode(HttpStatus.OK)
+  @Patch('/update/:id')
+  @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
+  update(@Param('id',ParseIntPipe) id:number,@Body() categoryDto:UpdateCategoryDto){
+    return this.categoryService.update(id,categoryDto)
+
   }
 }

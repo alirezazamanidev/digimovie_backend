@@ -15,6 +15,7 @@ import {
 import slugify from 'slugify';
 import { paginaionQueryDto } from 'src/common/dtos';
 import { paginationGenerator, paginationSolver } from 'src/common/utils';
+import { UpdateCategoryDto } from './dtos/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -80,5 +81,23 @@ export class CategoryService {
         pagtination:paginationGenerator(count,page,limit),
         categories
     }
+  }
+  async update(id:number,categoryDto:UpdateCategoryDto){
+    let {title,slug,description}=categoryDto;
+    let category=await this.findOneById(id);
+
+    if(title) category.title=title;
+    if(slug){
+        await this.checkExistBySlug(slug);
+        category.slug=slug;
+    }else{
+        if(title) category.slug=await this.checkExistBySlug(slugify(title,{replacement:"_",lower:true,trim:true}));
+    }
+    
+   if(description) category.description=description;
+   await this.categoryRepository.save(category);
+   return {
+    message:PublicMessage.Updated
+   }
   }
 }
