@@ -4,7 +4,7 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 export class TypeOrmDbConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(connectionName?: string): TypeOrmModuleOptions {
     return {
-      type: 'mysql',
+      type: 'postgres',
       port: 3306,
       host: process.env.DB_HOST,
       password: process.env.DB_PASSWORD,
@@ -12,7 +12,7 @@ export class TypeOrmDbConfig implements TypeOrmOptionsFactory {
       database: process.env.DB_NAME,
       entities: ['dist/modules/**/*.entity.js'],
       migrations: ['dist/database/migrations/*.{ts,js}'],
-      synchronize: false,
+      synchronize: true,
     };
   }
 }
