@@ -2,7 +2,7 @@
 
 export enum EntityNames {
     User='user',
-    User_Otp='user_otp',
+    activationCode='activation_code',
     Category='category',
     Movie='movie',
     videoMovie='video_movie'

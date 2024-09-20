@@ -1,11 +1,10 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity, UserOtpEntity } from '../user/entities';
+import { UserEntity } from '../user/entities';
 import { Repository } from 'typeorm';
 import {
   AuthMessage,
@@ -25,8 +24,6 @@ export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(UserOtpEntity)
-    private userOtpRepository: Repository<UserOtpEntity>,
     private readonly tokenService: TokensService,
   ) {}
 

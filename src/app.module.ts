@@ -11,7 +11,7 @@ import { MailModule } from './modules/mail/mail.module';
   imports: [TypeOrmModule.forRootAsync({
     useClass:TypeOrmDbConfig,
     inject:[TypeOrmModule]
-  }), UserModule, AuthModule, CategoryModule, MovieModule, MailModule],
+  }), AuthModule,UserModule, CategoryModule, MovieModule, MailModule],
   providers:[TypeOrmDbConfig]
 })
 export class AppModule {}

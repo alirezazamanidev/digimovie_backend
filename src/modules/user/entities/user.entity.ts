@@ -1,7 +1,7 @@
 import { BaseEntity } from "src/common/abstracts/baseEntity";
 import { EntityNames } from "src/common/enums";
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, UpdateDateColumn } from "typeorm";
-import { UserOtpEntity } from "./otp.entity";
+import { ActivationCodeEntity } from "./activationCode.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -11,6 +11,8 @@ export class UserEntity extends BaseEntity {
     @Column({unique:true,nullable:false})
     username:string
     @Column()
+    @Column({nullable:true})
+    activeCodeId:number
     hashedPassword:string
     @Column({nullable:false,unique:true})
     email:string
@@ -23,8 +25,8 @@ export class UserEntity extends BaseEntity {
     @UpdateDateColumn()
     updated_at:Date
 
-    @OneToOne(() => UserOtpEntity, (otp) => otp.user, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'otpId' })
-    otp: UserOtpEntity;
+    @OneToOne(() => ActivationCodeEntity, (actcode) => actcode.user, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'activeCodeId' })
+    token: ActivationCodeEntity;
   
 }

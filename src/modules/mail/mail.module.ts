@@ -18,7 +18,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
         
       },
       template:{
-        dir:join('templates'),
+        dir:join(__dirname,'templates'),
         adapter:new EjsAdapter()
       },
       options:{
@@ -26,6 +26,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
       }
     })
   ],
-  providers: [MailService]
+  providers: [MailService],
+  exports:[MailService]
 })
 export class MailModule {}

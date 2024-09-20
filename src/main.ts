@@ -10,7 +10,7 @@ async function bootstrap() {
   const httpAdapter = app.get(HttpAdapterHost);
   app.enableCors({origin:['http://localhost:3000',process.env.URL_CLIENT]})
   // exceptions
-  app.useGlobalFilters(...getGlobalFilters(httpAdapter));
+  // app.useGlobalFilters(...getGlobalFilters(httpAdapter));
   app.useGlobalPipes(new ValidationPipeErorr());
 
   app.setGlobalPrefix('api');
