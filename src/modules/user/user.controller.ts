@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
 import { UserService } from './user.service';
@@ -15,6 +15,13 @@ export class UserController {
     @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
     verifyEmail(@Body() verifyEmaidto:VerifyEmailDto){
         return this.userService.verifyEmail(verifyEmaidto)
+
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Get('/email/check/:token')
+    checkVerifyEmail(@Param('token') token:string){
+        return this.userService.checkverifyToken(token)
 
     }
 }

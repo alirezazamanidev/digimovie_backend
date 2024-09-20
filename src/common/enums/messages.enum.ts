@@ -30,10 +30,13 @@ export enum AuthMessage {
   export enum BadRequestMessage {
     InvalidCategories = 'دسته بندی ها را به درستی وارد کنید!',
     NotMonyInWallet = 'مبلغ کیف پول شما  برای ایجاد اگهی کافی نمی باشد! لطفا برای شارژ کیف پول اقدام نمایید!',
+    ActiveCodeExpired='اعتبار لینک فعال سازی به پایان رسیده است!',
+    AlreadyUsedActiveCode='این لینک قبلا مورد استفاده قرار گرفته است!'
   }
   export enum NotFoundMessage {
     NotFound = 'موردی یافت نشد!',
     Category = 'دسته بندی یافت نشد!',
+    ActiveCode='لینک فعال سازی یافت نشد!',
     User = 'کاربری یافت نشد!',
     Option='اپشن یاخت نشد!',
     Post='آگهی یافت نشد!',
