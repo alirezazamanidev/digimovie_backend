@@ -8,16 +8,16 @@ export class UserEntity extends BaseEntity {
 
     @Column({unique:true})
     phone:string
-    @Column({unique:true,nullable:true})
+    @Column({unique:true,nullable:false})
     username:string
-    @Column({nullable:true})
-    fullname:string
-    @Column({nullable:true,unique:true})
+    @Column()
+    hashedPassword:string
+    @Column({nullable:false,unique:true})
     email:string
     @Column({default:false})
     phone_verify:boolean;
-    @Column({nullable:true})
-    otpId:number
+    @Column({default:false})
+    email_verify:boolean
     @CreateDateColumn()
     created_at:Date
     @UpdateDateColumn()

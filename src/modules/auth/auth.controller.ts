@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req } from '@nestjs/
 import { AuthService } from './auth.service';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ContentType, SwaggerTags } from 'src/common/enums';
-import { CheckOtpDTo, SendOtpDTo } from './dto/auth.dto';
+import { SignUpDto } from './dto/auth.dto';
 import { Request } from 'express';
 import { retry } from 'rxjs';
 import { Auth } from 'src/common/decorators/auth.decorator';
@@ -13,20 +13,13 @@ import { Auth } from 'src/common/decorators/auth.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiOperation({summary:'signUp new user'})
+  @HttpCode(HttpStatus.CREATED)
+  @Post('signUp')
+  @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
+  signUp(@Body() userDto:SignUpDto){
+    return this.authService.signUp(userDto)
 
-  @ApiOperation({summary:'Send otp (one time password)'})
-  @HttpCode(HttpStatus.OK)
-  @Post('send-otp')
-  @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
-  sendOtp(@Body() userDto:SendOtpDTo){
-     return this.authService.sendOtp(userDto);
-  }
-  @ApiOperation({summary:'check otp (one time password)'})
-  @HttpCode(HttpStatus.OK)
-  @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
-  @Post('check-otp')
-  checkOtp(@Body() userDto:CheckOtpDTo){
-     return this.authService.checkOtp(userDto);
   }
 
   @ApiOperation({summary:'check login and get payload user login'})

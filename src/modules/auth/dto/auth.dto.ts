@@ -1,29 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMobilePhone, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsEmail, IsMobilePhone, IsNotEmpty, IsString, Length } from 'class-validator';
 
-export class SendOtpDTo {
-  @ApiProperty({
-    description: 'Enter phoneNumber :',
-    type: String,
-    example: '09914275883',
-  })
+export class SignUpDto {
+  @ApiProperty({type:String})
   @IsNotEmpty()
-  @IsString()
+  @Length(5, 20)
+  username: string;
+  @ApiProperty()
+  @Length(8, 20)
+  password: string;
+  @ApiProperty()
+  @IsEmail()
+  email:string
+  @ApiProperty()
   @IsMobilePhone('fa-IR')
-  phone: string;
-}
-export class CheckOtpDTo {
-  @ApiProperty({
-    description: 'Enter phoneNumber :',
-    type: String,
-  })
-  @IsNotEmpty()
-  @IsString()
-  @IsMobilePhone('fa-IR')
-  phone: string;
-  @ApiProperty({ description: 'Enter code :' })
-  @IsNotEmpty()
-  @IsString()
-  @Length(5, 5)
-  code: string;
+  phone:string
+
 }

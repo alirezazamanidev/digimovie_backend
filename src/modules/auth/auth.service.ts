@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -6,10 +7,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity, UserOtpEntity } from '../user/entities';
 import { Repository } from 'typeorm';
-import { AuthMessage, NotFoundMessage, PublicMessage } from 'src/common/enums';
-import { CheckOtpDTo, SendOtpDTo } from './dto/auth.dto';
+import { AuthMessage, ConflictMessage, NotFoundMessage, PublicMessage } from 'src/common/enums';
+
 import { randomInt } from 'crypto';
 import { TokensService } from './tokens.service';
+import { SignUpDto } from './dto/auth.dto';
+import { genSaltSync, hashSync } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -21,90 +24,51 @@ export class AuthService {
     private readonly tokenService: TokensService,
   ) {}
 
-  async sendOtp(SendOtpDto: SendOtpDTo) {
-    const { phone } = SendOtpDto;
 
-    let user = await this.userRepository.findOneBy({ phone });
-
-    if (!user) {
-      user = this.userRepository.create({ phone });
-      user = await this.userRepository.save(user);
-    }
-    const otp = await this.createOtpForUser(user);
-
-    // send sms by kavenegar
-    // await this.kavenegarService.sendVerificatrionSms(user.phone, otp.code);
+  async signUp(userDto:SignUpDto){
+    let {username,password,email,phone}=userDto;
+    // check exist user by username
+    await this.checkExitAccount(phone,email,username);
+    await this.checkExistByUsername(username);
+    // hash bassword 
+    const salt=genSaltSync(16);
+    const hash=hashSync(password,salt);
+    // create new user
+    const newUser=this.userRepository.create({
+      username,
+      hashedPassword:hash,
+      phone,
+      email,
+      email_verify:false,
+      phone_verify:false,
+    });
+    const savedUser=await this.userRepository.save(newUser);
+    // create token
+    const token=this.tokenService.createJWtToken({userId:savedUser.id});
     return {
-      message: PublicMessage.SendOtp,
-      code: otp.code,
-    };
-  }
-  async checkOtp(checkOtpDto: CheckOtpDTo) {
-    const { code, phone } = checkOtpDto;
-    const user = await this.userRepository.findOne({
-      where: { phone },
-      relations: { otp: true },
-    });
-    if (!user || !user?.otp)
-      throw new UnauthorizedException(AuthMessage.LoginAgain);
-    const now = new Date();
-    const otp = user.otp;
-    if (otp.expiresIn < now)
-      throw new UnauthorizedException(AuthMessage.ExpiredCode);
-
-    if (otp.code !== code)
-      throw new UnauthorizedException(AuthMessage.OtpCodeIsIncorrect);
-    const accessToken = this.tokenService.createJWtToken({
-      userId: user.id,
-    });
-    await this.userRepository.update({ id: user.id }, { phone_verify: true });
-    return {
-      message: PublicMessage.LoggedIn,
-      JwtTokenInfo: {
-        type: 'bearer',
-        filed: 'authorization',
-        expiresIn: ' 7 days',
-        value: accessToken,
-      },
-    };
-  }
-  private async createOtpForUser(user: UserEntity) {
-    let otp = await this.userOtpRepository.findOneBy({ userId: user.id });
-    const code = randomInt(10000, 99999).toString();
-    const expiresIn = new Date(new Date().getTime() + 2 * 1000 * 60);
-    let existOtp = false;
-    const now = new Date();
-    if (otp) {
-      if (otp.expiresIn > now)
-        throw new UnauthorizedException(AuthMessage.NotExpiredOtp);
-      existOtp = true;
-      otp.code = code;
-      otp.expiresIn = expiresIn;
-    } else {
-      otp = this.userOtpRepository.create({ code, expiresIn, userId: user.id });
+      message:PublicMessage.SignUp,
+      token
     }
-    otp = await this.userOtpRepository.save(otp);
-    if (!existOtp) {
-      await this.userRepository.update({ id: user.id }, { otpId: otp.id });
-    }
-    return otp;
+
+
   }
 
-  async FindOneUserById(id: number) {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      select: {
-        id: true,
-        username: true,
-        fullname: true,
-        phone: true,
-        phone_verify: true,
-        created_at: true,
-        updated_at: true,
-      },
-    });
-    if (!user) throw new NotFoundException(NotFoundMessage.User);
+  async checkExistByUsername(username:string){
 
-    return user;
+    const user=await this.userRepository.findOne({where:{username}});
+    if(user) throw new ConflictException(ConflictMessage.Username);
+    
+  }
+  async checkExitAccount(phone:string,email:string,username:string){
+    const user=await this.userRepository.findOne({
+      where:{
+        username,
+        phone,
+        email
+      }
+    });
+    if(user) throw new ConflictException(ConflictMessage.Account);
+    
+
   }
 }
