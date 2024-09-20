@@ -5,12 +5,13 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoryModule } from './modules/category/category.module';
 import { MovieModule } from './modules/movie/movie.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
     useClass:TypeOrmDbConfig,
     inject:[TypeOrmModule]
-  }), UserModule, AuthModule, CategoryModule, MovieModule],
+  }), UserModule, AuthModule, CategoryModule, MovieModule, MailModule],
   providers:[TypeOrmDbConfig]
 })
 export class AppModule {}
