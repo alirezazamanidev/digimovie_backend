@@ -17,3 +17,13 @@ export class SignUpDto {
   phone:string
 
 }
+export class SignInDTo {
+  @ApiProperty({description:'Enter username or email',type:String,required:true})
+  @IsNotEmpty()
+  @IsString()
+  username:string
+  @ApiProperty()
+  @Length(8,20)
+  @IsString()
+  password:string
+}

@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req } from '@nestjs/
 import { AuthService } from './auth.service';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ContentType, SwaggerTags } from 'src/common/enums';
-import { SignUpDto } from './dto/auth.dto';
+import { SignInDTo, SignUpDto } from './dto/auth.dto';
 import { Request } from 'express';
 import { retry } from 'rxjs';
 import { Auth } from 'src/common/decorators/auth.decorator';
@@ -20,6 +20,13 @@ export class AuthController {
   signUp(@Body() userDto:SignUpDto){
     return this.authService.signUp(userDto)
 
+  }
+  @ApiOperation({summary:"signIn user"})
+  @HttpCode(HttpStatus.OK)
+  @Post('signIn')
+  @ApiConsumes(ContentType.UrlEncoded,ContentType.Json)
+  signIn(@Body() userDto:SignInDTo){
+    return this.authService.signIn(userDto);
   }
 
   @ApiOperation({summary:'check login and get payload user login'})
