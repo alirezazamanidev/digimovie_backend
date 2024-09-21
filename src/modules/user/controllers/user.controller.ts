@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { VerifyEmailDto } from './dtos/verify-email.dto';
-import { UserService } from './user.service';
+import { VerifyEmailDto } from '../dtos/verify-email.dto';
+import { UserService } from '../services/user.service';
 import { ContentType, SwaggerTags } from 'src/common/enums';
 
 @ApiTags(SwaggerTags.User)

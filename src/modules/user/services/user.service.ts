@@ -5,11 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ActivationCodeEntity, UserEntity } from './entities';
+import { ActivationCodeEntity, UserEntity } from '../entities';
 import { MoreThan, Repository } from 'typeorm';
-import { VerifyEmailDto } from './dtos/verify-email.dto';
+import { VerifyEmailDto } from '../dtos/verify-email.dto';
 import { BadRequestMessage, NotFoundMessage } from 'src/common/enums';
-import { MailService } from '../mail/mail.service';
+import { MailService } from '../../mail/mail.service';
 import { randomBytes, randomInt } from 'crypto';
 
 @Injectable()

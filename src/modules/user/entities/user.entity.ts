@@ -1,7 +1,9 @@
 import { BaseEntity } from "src/common/abstracts/baseEntity";
 import { EntityNames } from "src/common/enums";
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, UpdateDateColumn } from "typeorm";
 import { ActivationCodeEntity } from "./activationCode.entity";
+import { WalletEntity } from "./wallet.entity";
+import { PaymentEntity } from "src/modules/payment/entities/payment.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity extends BaseEntity {
@@ -13,6 +15,7 @@ export class UserEntity extends BaseEntity {
     @Column()
     @Column({nullable:true})
     activeCodeId:number
+    @Column()
     hashedPassword:string
     @Column({nullable:false,unique:true})
     email:string
@@ -28,5 +31,9 @@ export class UserEntity extends BaseEntity {
     @OneToOne(() => ActivationCodeEntity, (actcode) => actcode.user, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'activeCodeId' })
     token: ActivationCodeEntity;
-  
+
+    @OneToOne(()=>WalletEntity,wallet=>wallet.user)
+    wallet:WalletEntity
+    @OneToMany(()=>PaymentEntity,payment=>payment.user)
+    payments:PaymentEntity[]
 }
